@@ -1,21 +1,26 @@
 provider "aws" {
-  region = "us-west-2"
+  region = "ap-southeast-1"
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
+data "aws_ami" "al2023" {
+    most_recent = true
 
-  filter {
-    name = "name"
-    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
-  }
+    owners = [ "amazon" ]
 
-  owners = ["099720109477"] # Canonical
+    filter {
+      name = "name"
+      values = [ "al2023-ami-*-x86_64-" ]
+    }
+
+    filter {
+      name = "state"
+      values = [ "available" ]
+    }
 }
 
 resource "aws_instance" "app_server" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  ami           = data.aws_ami.al2023.id
+  instance_type = "t3.micro"
 
   tags = {
     Name = "learn-terraform"
